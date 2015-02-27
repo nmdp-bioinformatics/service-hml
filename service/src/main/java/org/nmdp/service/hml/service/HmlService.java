@@ -1,6 +1,6 @@
 /*
 
-    hml-resource  HML resources.
+    hml-service  HML service.
     Copyright (c) 2015 National Marrow Donor Program (NMDP)
 
     This library is free software; you can redistribute it and/or modify it
@@ -20,7 +20,7 @@
     > http://www.gnu.org/licenses/lgpl.html
 
 */
-package org.nmdp.service.hml.resource;
+package org.nmdp.service.hml.service;
 
 import org.nmdp.ngs.hml.jaxb.Hml;
 
@@ -42,8 +42,9 @@ public interface HmlService {
      * must be present for MIRING compliance.
      *
      * @param hml hml, must not be null
+     * @throws HmlValidationException if the HML document is not semantically valid
      * @return the id for the newly registered HML document, root or root/extension attributes of the
      *    <code>&lt;hmlid%gt;</code> element
      */
-    public String registerHml(final Hml hml); // throws HmlServiceException?
+    public String registerHml(final Hml hml);
 }

@@ -1,6 +1,6 @@
 /*
 
-    hml-resource  HML resources.
+    hml-service-impl  HML service implementation.
     Copyright (c) 2015 National Marrow Donor Program (NMDP)
 
     This library is free software; you can redistribute it and/or modify it
@@ -20,7 +20,7 @@
     > http://www.gnu.org/licenses/lgpl.html
 
 */
-package org.nmdp.service.hml.resource;
+package org.nmdp.service.hml.service.impl;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -30,6 +30,9 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import org.nmdp.ngs.hml.jaxb.Hml;
 
+import org.nmdp.service.hml.service.HmlService;
+import org.nmdp.service.hml.service.HmlValidationException;
+
 /**
  * HML service implementation.
  */
@@ -38,11 +41,12 @@ final class HmlServiceImpl implements HmlService {
 
     @Override
     public Hml getHml(final String id) {
-        return cache.get(id);
+        return id == null ? null : cache.get(id);
     }
 
     @Override
     public String registerHml(final Hml hml) {
+        checkNotNull(hml);
         if (hml.getHmlid() == null) {
             throw new HmlValidationException("<hmlid> element must be present");
         }
