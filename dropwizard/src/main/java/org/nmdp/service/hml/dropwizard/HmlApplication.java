@@ -39,6 +39,8 @@ import io.dropwizard.setup.Environment;
 
 import org.nmdp.service.common.dropwizard.CommonServiceApplication;
 
+import org.nmdp.service.hml.resource.HmlExceptionMapper;
+import org.nmdp.service.hml.resource.HmlMessageBodyReader;
 import org.nmdp.service.hml.resource.HmlResource;
 import org.nmdp.service.hml.resource.HmlServiceModule;
 
@@ -63,6 +65,8 @@ public final class HmlApplication extends CommonServiceApplication<HmlConfigurat
         Injector injector = Guice.createInjector(new HmlServiceModule());
 
         environment.jersey().register(injector.getInstance(HmlResource.class));
+        environment.jersey().register(new HmlExceptionMapper());
+        environment.jersey().register(new HmlMessageBodyReader());
 
         environment.getObjectMapper()
             .enable(SerializationFeature.INDENT_OUTPUT);

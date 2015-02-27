@@ -24,6 +24,8 @@ package org.nmdp.service.hml.resource;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
+import java.io.IOException;
+
 import java.net.URI;
 
 import javax.annotation.concurrent.Immutable;
