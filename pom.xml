@@ -59,10 +59,8 @@
     <module>service-impl</module>
     <module>resource</module>
     <module>dropwizard</module>
-<!--
     <module>client</module>
     <module>tools</module>
--->
   </modules>
   <dependencyManagement>
     <dependencies>
