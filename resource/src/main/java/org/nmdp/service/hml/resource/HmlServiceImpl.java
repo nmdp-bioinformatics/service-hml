@@ -22,6 +22,8 @@
 */
 package org.nmdp.service.hml.resource;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 import java.util.Map;
 
 import java.util.concurrent.ConcurrentHashMap;
@@ -40,7 +42,20 @@ final class HmlServiceImpl implements HmlService {
     }
 
     @Override
-    public void registerHml(final Hml hml) {
-        cache.put(hml.getHmlid().getExtension(), hml);
+    public String registerHml(final Hml hml) {
+        checkNotNull(hml, "hml must not be null");
+        checkNotNull(hml.getHmlid(), "<hmlid> element must be present");
+
+        String root = hml.getHmlid().getRoot();
+        String extension = hml.getHmlid().getExtension();
+        if (extension == null || extension.trim().length() == 0) {
+            cache.put(root, hml);
+            return root;
+        }
+        else {
+            String id = root + "/" + extension;
+            cache.put(id, hml);
+            return id;
+        }
     }
 }

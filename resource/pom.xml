@@ -80,6 +80,11 @@
       <scope>test</scope>
     </dependency>
     <dependency>
+      <groupId>org.nmdp.service</groupId>
+      <artifactId>common-dropwizard</artifactId>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
       <groupId>org.nmdp.ngs</groupId>
       <artifactId>ngs-hml</artifactId>
       <scope>compile</scope>

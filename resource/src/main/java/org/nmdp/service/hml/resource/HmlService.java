@@ -28,6 +28,22 @@ import org.nmdp.ngs.hml.jaxb.Hml;
  * HML service.
  */
 public interface HmlService {
+
+    /**
+     * Retrieve the HML document for the specified id, if any.
+     *
+     * @param id id, root or root/extension attributes of the <code>&lt;hmlid%gt;</code> element
+     * @return the HML document for the specified id or <code>null</code> if no such HML document exists
+     */
     public Hml getHml(final String id);
-    public void registerHml(final Hml hml);
+
+    /**
+     * Register the specified HML document.  Note an <code>&lt;hmlid&gt;</code> element
+     * must be present for MIRING compliance.
+     *
+     * @param hml hml, must not be null
+     * @return the id for the newly registered HML document, root or root/extension attributes of the
+     *    <code>&lt;hmlid%gt;</code> element
+     */
+    public String registerHml(final Hml hml); // throws HmlServiceException?
 }

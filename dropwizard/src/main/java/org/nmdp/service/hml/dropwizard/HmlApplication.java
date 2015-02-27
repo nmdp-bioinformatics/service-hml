@@ -30,10 +30,14 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 
-import io.dropwizard.Application;
+import com.wordnik.swagger.config.SwaggerConfig;
+
+import com.wordnik.swagger.model.ApiInfo;
 
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
+
+import org.nmdp.service.common.dropwizard.CommonServiceApplication;
 
 import org.nmdp.service.hml.resource.HmlResource;
 import org.nmdp.service.hml.resource.HmlServiceModule;
@@ -42,7 +46,7 @@ import org.nmdp.service.hml.resource.HmlServiceModule;
  * HML application.
  */
 @Immutable
-public final class HmlApplication extends Application<HmlConfiguration> {
+public final class HmlApplication extends CommonServiceApplication<HmlConfiguration> {
 
     @Override
     public String getName() {
@@ -50,18 +54,29 @@ public final class HmlApplication extends Application<HmlConfiguration> {
     }
 
     @Override
-    public void initialize(final Bootstrap<HmlConfiguration> bootstrap) {
+    public void initializeService(final Bootstrap<HmlConfiguration> bootstrap) {
         // empty
     }
 
     @Override
-    public void run(final HmlConfiguration configuration, final Environment environment) throws Exception {
+    public void runService(final HmlConfiguration configuration, final Environment environment) throws Exception {
         Injector injector = Guice.createInjector(new HmlServiceModule());
 
         environment.jersey().register(injector.getInstance(HmlResource.class));
 
         environment.getObjectMapper()
             .enable(SerializationFeature.INDENT_OUTPUT);
+    }
+
+    @Override
+    public void configureSwagger(final SwaggerConfig config) {
+        config.setApiVersion("1.0");
+        config.setApiInfo(new ApiInfo("HML service",
+                                      "HML service.",
+                                      null,
+                                      null,
+                                      "GNU Lesser General Public License (LGPL), version 3 or later",
+                                      "http://www.gnu.org/licenses/lgpl.html"));
     }
 
 
