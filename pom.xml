@@ -74,6 +74,11 @@
         <artifactId>ngs-hml</artifactId>
         <version>1.6</version>
       </dependency>
+      <dependency>
+        <groupId>org.nmdp.service</groupId>
+        <artifactId>common-dropwizard</artifactId>
+        <version>1.0</version>
+      </dependency>
     </dependencies>
   </dependencyManagement>
 </project>
