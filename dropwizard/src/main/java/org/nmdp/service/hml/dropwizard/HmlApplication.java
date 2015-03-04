@@ -42,7 +42,8 @@ import org.nmdp.service.common.dropwizard.CommonServiceApplication;
 import org.nmdp.service.hml.resource.HmlExceptionMapper;
 import org.nmdp.service.hml.resource.HmlMessageBodyReader;
 import org.nmdp.service.hml.resource.HmlResource;
-import org.nmdp.service.hml.resource.HmlServiceModule;
+
+import org.nmdp.service.hml.service.impl.HmlServiceModule;
 
 /**
  * HML application.

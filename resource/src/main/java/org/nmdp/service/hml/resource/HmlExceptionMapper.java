@@ -31,6 +31,8 @@ import javax.ws.rs.core.Response;
 
 import javax.xml.bind.UnmarshalException;
 
+import org.nmdp.service.hml.service.HmlValidationException;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

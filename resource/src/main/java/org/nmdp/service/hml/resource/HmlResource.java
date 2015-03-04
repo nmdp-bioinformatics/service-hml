@@ -49,6 +49,8 @@ import com.wordnik.swagger.annotations.ApiParam;
 
 import org.nmdp.ngs.hml.jaxb.Hml;
 
+import org.nmdp.service.hml.service.HmlService;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

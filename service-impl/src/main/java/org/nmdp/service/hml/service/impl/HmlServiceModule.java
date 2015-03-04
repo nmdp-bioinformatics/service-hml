@@ -1,6 +1,6 @@
 /*
 
-    hml-resource  HML resources.
+    hml-service-impl  HML service implementation.
     Copyright (c) 2015 National Marrow Donor Program (NMDP)
 
     This library is free software; you can redistribute it and/or modify it
@@ -20,13 +20,15 @@
     > http://www.gnu.org/licenses/lgpl.html
 
 */
-package org.nmdp.service.hml.resource;
+package org.nmdp.service.hml.service.impl;
 
 import javax.annotation.concurrent.Immutable;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
 import com.google.inject.Singleton;
+
+import org.nmdp.service.hml.service.HmlService;
 
 /**
  * HML service module.
