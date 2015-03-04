@@ -43,9 +43,9 @@ final class HmlServiceImpl implements HmlService {
 
     @Override
     public String registerHml(final Hml hml) {
-        checkNotNull(hml, "hml must not be null");
-        checkNotNull(hml.getHmlid(), "<hmlid> element must be present");
-
+        if (hml.getHmlid() == null) {
+            throw new HmlValidationException("<hmlid> element must be present");
+        }
         String root = hml.getHmlid().getRoot();
         String extension = hml.getHmlid().getExtension();
         if (extension == null || extension.trim().length() == 0) {
