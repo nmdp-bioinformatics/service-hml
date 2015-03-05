@@ -30,10 +30,8 @@ import com.google.inject.Singleton;
 
 import retrofit.RestAdapter;
 
-import retrofit.converter.SimpleXMLConverter;
-
 /**
- * Hml service module.
+ * HML service module.
  */
 @Immutable
 public final class HmlServiceModule extends AbstractModule {
@@ -47,7 +45,7 @@ public final class HmlServiceModule extends AbstractModule {
     static HmlService createHmlService(@EndpointUrl final String endpointUrl) {
         return new RestAdapter.Builder()
             .setEndpoint(endpointUrl)
-            .setConverter(new SimpleXMLConverter())
+            .setConverter(new HmlConverter())
             .build().create(HmlService.class);
     }
 }
