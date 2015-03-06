@@ -38,8 +38,8 @@ import rx.Observable;
  */
 public interface HmlService {
 
-    @GET("/hml/${id}")
-    Hml getHml(@Path("id") String id);
+    @GET("/hml/{root}/{extension}")
+    Hml getHml(@Path("root") String root, @Path("extension") String extension);
 
     @POST("/hml")
     Response registerHml(@Body Hml hml);

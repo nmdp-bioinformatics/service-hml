@@ -111,11 +111,7 @@ public final class RetrieveHml implements Callable<Integer> {
         BufferedReader reader = null;
         try {
             if (root != null) {
-                String id = root;
-                if (extension != null && extension.length() > 0) {
-                    id = root + "/" + extension;
-                }
-                call(id);
+                call(root, extension);
             }
             else {
                 reader = reader(inputFile);
@@ -124,7 +120,8 @@ public final class RetrieveHml implements Callable<Integer> {
                     if (line == null) {
                         break;
                     }
-                    call(line.trim());
+                    String tokens[] = line.trim().split("/");
+                    call(tokens[0], tokens.length > 1 ? tokens[1] : null);
                 }
             }
             return 0;
@@ -143,9 +140,17 @@ public final class RetrieveHml implements Callable<Integer> {
         }
     }
 
-    private void call(final String id) throws IOException {
-        Hml hml = hmlService.getHml(id);
-        try (PrintWriter writer = writer(new File(id.replace("/", "-") + ".hml.gz"))) {
+    private void call(final String root, final String extension) throws IOException {
+        Hml hml = hmlService.getHml(root, extension);
+
+        StringBuilder sb = new StringBuilder(root);
+        if (extension != null && extension.length() > 0) {
+            sb.append("-");
+            sb.append(extension);
+        }
+        sb.append(".hml.gz");
+
+        try (PrintWriter writer = writer(new File(sb.toString()))) {
             HmlWriter.write(hml, writer);
         }
     }
