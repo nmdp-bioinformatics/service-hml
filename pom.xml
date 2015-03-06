@@ -57,6 +57,7 @@
   <modules>
     <module>service</module>
     <module>service-impl</module>
+    <module>service-jdbi</module>
     <module>resource</module>
     <module>dropwizard</module>
     <module>client</module>

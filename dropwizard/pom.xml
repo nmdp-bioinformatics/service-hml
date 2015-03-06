@@ -81,6 +81,11 @@
         <artifactId>hml-service-impl</artifactId>
         <version>${project.version}</version>
       </dependency>
+      <dependency>
+        <groupId>org.nmdp.service</groupId>
+        <artifactId>hml-service-jdbi</artifactId>
+        <version>${project.version}</version>
+      </dependency>
     </dependencies>
   </dependencyManagement>
   <dependencies>
@@ -125,6 +130,11 @@
       <scope>compile</scope>
     </dependency>
     <dependency>
+      <groupId>io.dropwizard</groupId>
+      <artifactId>dropwizard-jdbi</artifactId>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
       <groupId>org.nmdp.service</groupId>
       <artifactId>hml-resource</artifactId>
       <scope>compile</scope>
@@ -132,6 +142,11 @@
     <dependency>
       <groupId>org.nmdp.service</groupId>
       <artifactId>hml-service-impl</artifactId>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.nmdp.service</groupId>
+      <artifactId>hml-service-jdbi</artifactId>
       <scope>compile</scope>
     </dependency>
   </dependencies>

@@ -1,6 +1,6 @@
 /*
 
-    hml-dropwizard  HML dropwizard.
+    hml-service-jdbi  JDBI HML service.
     Copyright (c) 2015 National Marrow Donor Program (NMDP)
 
     This library is free software; you can redistribute it and/or modify it
@@ -20,32 +20,19 @@
     > http://www.gnu.org/licenses/lgpl.html
 
 */
-package org.nmdp.service.hml.dropwizard;
+package org.nmdp.service.hml.service.jdbi;
 
-import javax.annotation.concurrent.Immutable;
+import static org.junit.Assert.assertNotNull;
 
-import javax.validation.Valid;
-
-import javax.validation.constraints.NotNull;
-
-import com.fasterxml.jackson.annotation.JsonProperty;
-
-import io.dropwizard.Configuration;
-
-import io.dropwizard.db.DataSourceFactory;
+import org.junit.Test;
 
 /**
- * HML configuration.
+ * Unit test for HmlMapper.
  */
-@Immutable
-public final class HmlConfiguration extends Configuration {
-    @Valid
-    @NotNull
-    @JsonProperty
-    private final DataSourceFactory database = new DataSourceFactory();
+public final class HmlMapperTest {
 
-    public DataSourceFactory getDataSourceFactory() {
-        return database;
+    @Test
+    public void testConstructor() {
+        assertNotNull(new HmlMapper());
     }
 }
-
