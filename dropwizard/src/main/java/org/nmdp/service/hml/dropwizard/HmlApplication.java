@@ -34,6 +34,10 @@ import com.wordnik.swagger.config.SwaggerConfig;
 
 import com.wordnik.swagger.model.ApiInfo;
 
+import io.dropwizard.jdbi.DBIFactory;
+
+import io.dropwizard.jdbi.bundles.DBIExceptionsBundle;
+
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
 
@@ -44,6 +48,11 @@ import org.nmdp.service.hml.resource.HmlMessageBodyReader;
 import org.nmdp.service.hml.resource.HmlResource;
 
 import org.nmdp.service.hml.service.impl.HmlServiceModule;
+
+import org.nmdp.service.hml.service.jdbi.HmlDao;
+import org.nmdp.service.hml.service.jdbi.JdbiHmlServiceModule;
+
+import org.skife.jdbi.v2.DBI;
 
 /**
  * HML application.
@@ -58,11 +67,27 @@ public final class HmlApplication extends CommonServiceApplication<HmlConfigurat
 
     @Override
     public void initializeService(final Bootstrap<HmlConfiguration> bootstrap) {
-        // empty
+        // for hml-service-jdbi
+        //bootstrap.addBundle(new DBIExceptionsBundle());
     }
 
     @Override
     public void runService(final HmlConfiguration configuration, final Environment environment) throws Exception {
+        // for hml-service-jdbi
+        /*
+        final DBIFactory factory = new DBIFactory();
+        final DBI jdbi = factory.build(environment, configuration.getDataSourceFactory(), "mysql");
+        final HmlDao hmlDao = jdbi.onDemand(HmlDao.class);
+
+        Injector injector = Guice.createInjector(new JdbiHmlServiceModule(), new AbstractModule() {
+                @Override
+                protected void configure() {
+                    bind(HmlDao.class).toInstance(hmlDao);
+                }
+            });
+        */
+
+        // for hml-service-impl
         Injector injector = Guice.createInjector(new HmlServiceModule());
 
         environment.jersey().register(injector.getInstance(HmlResource.class));

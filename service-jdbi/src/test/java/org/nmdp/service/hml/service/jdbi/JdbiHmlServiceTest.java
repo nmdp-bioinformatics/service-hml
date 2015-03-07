@@ -1,6 +1,6 @@
 /*
 
-    hml-dropwizard  HML dropwizard.
+    hml-service-jdbi  JDBI HML service.
     Copyright (c) 2015 National Marrow Donor Program (NMDP)
 
     This library is free software; you can redistribute it and/or modify it
@@ -20,32 +20,37 @@
     > http://www.gnu.org/licenses/lgpl.html
 
 */
-package org.nmdp.service.hml.dropwizard;
+package org.nmdp.service.hml.service.jdbi;
 
-import javax.annotation.concurrent.Immutable;
+import org.junit.Before;
+import org.junit.Test;
 
-import javax.validation.Valid;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 
-import javax.validation.constraints.NotNull;
-
-import com.fasterxml.jackson.annotation.JsonProperty;
-
-import io.dropwizard.Configuration;
-
-import io.dropwizard.db.DataSourceFactory;
+import org.nmdp.service.hml.service.AbstractHmlServiceTest;
+import org.nmdp.service.hml.service.HmlService;
 
 /**
- * HML configuration.
+ * Unit test for JdbiHmlService.
  */
-@Immutable
-public final class HmlConfiguration extends Configuration {
-    @Valid
-    @NotNull
-    @JsonProperty
-    private final DataSourceFactory database = new DataSourceFactory();
+public final class JdbiHmlServiceTest extends AbstractHmlServiceTest {
+    @Mock
+    private HmlDao hmlDao;
 
-    public DataSourceFactory getDataSourceFactory() {
-        return database;
+    @Before
+    public void setUp() {
+        MockitoAnnotations.initMocks(this);
+        super.setUp();
+    }
+
+    @Override
+    protected HmlService createHmlService() {
+        return new JdbiHmlService(hmlDao);
+    }
+
+    @Test(expected=NullPointerException.class)
+    public void testConstructorNullHmlDao() {
+        new JdbiHmlService(null);
     }
 }
-

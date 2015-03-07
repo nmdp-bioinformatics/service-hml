@@ -1,6 +1,6 @@
 /*
 
-    hml-dropwizard  HML dropwizard.
+    hml-service-jdbi  JDBI HML service.
     Copyright (c) 2015 National Marrow Donor Program (NMDP)
 
     This library is free software; you can redistribute it and/or modify it
@@ -20,32 +20,27 @@
     > http://www.gnu.org/licenses/lgpl.html
 
 */
-package org.nmdp.service.hml.dropwizard;
+package org.nmdp.service.hml.service.jdbi;
 
-import javax.annotation.concurrent.Immutable;
+import org.nmdp.ngs.hml.jaxb.Hml;
 
-import javax.validation.Valid;
+import org.skife.jdbi.v2.sqlobject.Bind;
+import org.skife.jdbi.v2.sqlobject.SqlQuery;
+import org.skife.jdbi.v2.sqlobject.SqlUpdate;
 
-import javax.validation.constraints.NotNull;
+import org.skife.jdbi.v2.sqlobject.customizers.Mapper;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
-import io.dropwizard.Configuration;
-
-import io.dropwizard.db.DataSourceFactory;
+import org.skife.jdbi.v2.sqlobject.mixins.Transactional;
 
 /**
- * HML configuration.
+ * HML data access object (DAO).
  */
-@Immutable
-public final class HmlConfiguration extends Configuration {
-    @Valid
-    @NotNull
-    @JsonProperty
-    private final DataSourceFactory database = new DataSourceFactory();
+public interface HmlDao extends Transactional<HmlDao> {
 
-    public DataSourceFactory getDataSourceFactory() {
-        return database;
-    }
+    @Mapper(HmlMapper.class)
+    @SqlQuery("select hml from hml where id = :id")
+    Hml findHml(@Bind("id") String id);
+
+    @SqlUpdate("insert into hml (id, hml) values (:id, :hml)")
+    void insertHml(@Bind("id") String id, @Bind("hml") String hml);
 }
-
