@@ -60,14 +60,19 @@ import org.nmdp.service.hml.client.HmlServiceModule;
  * Retrieve HML.
  */
 public final class RetrieveHml implements Callable<Integer> {
-    private final String root;
-    private final String extension;
     private final File inputFile;
     private final HmlService hmlService;
     static final String DEFAULT_ENDPOINT_URL = "http://localhost:8080/";
-    static final String USAGE = "retrieve-hml -u " + DEFAULT_ENDPOINT_URL + " -i ids.txt.gz";
+    static final String USAGE = "retrieve-hml -u " + DEFAULT_ENDPOINT_URL + " -i ids.txt.gz\n\n   HML documents are written to files ./${root}-${extension}.xml.gz";
 
-    private RetrieveHml(final String endpointUrl, final File inputFile, final String root, final String extension) {
+
+    /**
+     * Create a new retrieve HML callable with the specified endpoint URL and input file.
+     *
+     * @param endpointUrl endpoint URL, must not be null
+     * @param inputFile input file, if any
+     */
+    public RetrieveHml(final String endpointUrl, final File inputFile) {
         checkNotNull(endpointUrl);
 
         Injector injector = Guice.createInjector(new HmlServiceModule(), new AbstractModule() {
@@ -78,31 +83,7 @@ public final class RetrieveHml implements Callable<Integer> {
             });
 
         this.inputFile = inputFile;
-        this.root = root;
-        this.extension = extension;
         hmlService = injector.getInstance(HmlService.class);
-    }
-
-    /**
-     * Create a new retrieve HML callable with the specified endpoint URL and hmlid element root and extension attributes.
-     *
-     * @param endpointUrl endpoint URL, must not be null
-     * @param root hmlid element root attribute, must not be null
-     * @param extension hmlid element extension attribute
-     */
-    public RetrieveHml(final String endpointUrl, final String root, final String extension) {
-        this(endpointUrl, null, root, extension);
-        checkNotNull(root);
-   }
-
-    /**
-     * Create a new retrieve HML callable with the specified endpoint URL and input file.
-     *
-     * @param endpointUrl endpoint URL, must not be null
-     * @param inputFile input file, if any
-     */
-    public RetrieveHml(final String endpointUrl, final File inputFile) {
-        this(endpointUrl, inputFile, null, null);
     }
 
 
@@ -110,18 +91,27 @@ public final class RetrieveHml implements Callable<Integer> {
     public Integer call() {
         BufferedReader reader = null;
         try {
-            if (root != null) {
-                call(root, extension);
-            }
-            else {
-                reader = reader(inputFile);
-                while (reader.ready()) {
-                    String line = reader.readLine();
-                    if (line == null) {
-                        break;
-                    }
-                    String tokens[] = line.trim().split("/");
-                    call(tokens[0], tokens.length > 1 ? tokens[1] : null);
+            reader = reader(inputFile);
+            while (reader.ready()) {
+                String line = reader.readLine();
+                if (line == null) {
+                    break;
+                }
+                String tokens[] = line.trim().split("/");
+                String root = tokens[0];
+                String extension = tokens.length > 1 ? tokens[1] : null;
+
+                Hml hml = hmlService.getHml(root, extension);
+
+                StringBuilder sb = new StringBuilder(root);
+                if (extension != null && extension.length() > 0) {
+                    sb.append("-");
+                    sb.append(extension);
+                }
+                sb.append(".hml.gz");
+
+                try (PrintWriter writer = writer(new File(sb.toString()))) {
+                    HmlWriter.write(hml, writer);
                 }
             }
             return 0;
@@ -140,21 +130,6 @@ public final class RetrieveHml implements Callable<Integer> {
         }
     }
 
-    private void call(final String root, final String extension) throws IOException {
-        Hml hml = hmlService.getHml(root, extension);
-
-        StringBuilder sb = new StringBuilder(root);
-        if (extension != null && extension.length() > 0) {
-            sb.append("-");
-            sb.append(extension);
-        }
-        sb.append(".hml.gz");
-
-        try (PrintWriter writer = writer(new File(sb.toString()))) {
-            HmlWriter.write(hml, writer);
-        }
-    }
-
 
     /**
      * Main.
@@ -166,10 +141,8 @@ public final class RetrieveHml implements Callable<Integer> {
         Switch help = new Switch("h", "help", "display help message");
         StringArgument endpointUrl = new StringArgument("u", "endpoint-url", "endpoint URL, default " + DEFAULT_ENDPOINT_URL, false);
         FileArgument inputFile = new FileArgument("i", "input-file", "input file of HML ids (root or root/extension), one per line, default stdin", false);
-        StringArgument root = new StringArgument("r", "root", "hmlid element root attribute", false);
-        StringArgument extension = new StringArgument("e", "extension", "hmlid element extension attribute", false);
 
-        ArgumentList arguments = new ArgumentList(about, help, endpointUrl, inputFile, root, extension);
+        ArgumentList arguments = new ArgumentList(about, help, endpointUrl, inputFile);
         CommandLine commandLine = new CommandLine(args);
 
         RetrieveHml retrieveHml = null;
@@ -184,13 +157,7 @@ public final class RetrieveHml implements Callable<Integer> {
                 Usage.usage(USAGE, null, commandLine, arguments, System.out);
                 System.exit(0);
             }
-
-            if (root.wasFound()) {
-                retrieveHml = new RetrieveHml(endpointUrl.getValue(DEFAULT_ENDPOINT_URL), root.getValue(), extension.getValue());
-            }
-            else {
-                retrieveHml = new RetrieveHml(endpointUrl.getValue(DEFAULT_ENDPOINT_URL), inputFile.getValue());
-            }
+            retrieveHml = new RetrieveHml(endpointUrl.getValue(DEFAULT_ENDPOINT_URL), inputFile.getValue());
         }
         catch (CommandLineParseException e) {
             Usage.usage(USAGE, e, commandLine, arguments, System.err);
