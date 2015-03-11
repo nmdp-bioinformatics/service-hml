@@ -165,4 +165,8 @@
       </plugin>
     </plugins>
   </build>
+  <properties>
+    <about.timestamp>${maven.build.timestamp}</about.timestamp>
+    <maven.build.timestamp.format>yyyy-MM-dd</maven.build.timestamp.format>
+  </properties>
 </project>

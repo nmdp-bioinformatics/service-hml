@@ -39,6 +39,7 @@ import io.dropwizard.db.DataSourceFactory;
  */
 @Immutable
 public final class HmlConfiguration extends Configuration {
+    /*
     @Valid
     @NotNull
     @JsonProperty
@@ -47,5 +48,6 @@ public final class HmlConfiguration extends Configuration {
     public DataSourceFactory getDataSourceFactory() {
         return database;
     }
+    */
 }
 
