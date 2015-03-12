@@ -32,10 +32,6 @@
   <artifactId>hml-client</artifactId>
   <name>hml-client</name>
   <description>HML service client library.</description>
-  <properties>
-    <!-- todo: update version in service-parent -->
-    <retrofit.version>1.6.0</retrofit.version>
-  </properties>
   <dependencies>
     <dependency>
       <groupId>com.google.code.findbugs</groupId>

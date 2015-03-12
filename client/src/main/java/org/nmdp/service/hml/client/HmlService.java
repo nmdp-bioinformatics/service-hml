@@ -22,9 +22,9 @@
 */
 package org.nmdp.service.hml.client;
 
-import javax.ws.rs.core.Response;
-
 import org.nmdp.ngs.hml.jaxb.Hml;
+
+import retrofit.client.Response;
 
 import retrofit.http.Body;
 import retrofit.http.GET;
