@@ -34,8 +34,6 @@ import java.io.PrintWriter;
 
 import java.util.concurrent.Callable;
 
-import javax.ws.rs.core.Response;
-
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
@@ -57,6 +55,9 @@ import org.nmdp.ngs.hml.jaxb.Hml;
 import org.nmdp.service.hml.client.EndpointUrl;
 import org.nmdp.service.hml.client.HmlService;
 import org.nmdp.service.hml.client.HmlServiceModule;
+
+import retrofit.client.Header;
+import retrofit.client.Response;
 
 /**
  * Register HML.
@@ -103,9 +104,11 @@ public final class RegisterHml implements Callable<Integer> {
             Response response = hmlService.registerHml(hml);
             int status = response.getStatus();
             if (status == 201) {
-                //String location = response.getMetadata().get("Location");
-                //writer.println(location);
-                writer.println(response.getMetadata().toString());
+                for (Header header : response.getHeaders()) {
+                    if ("Location".equals(header.getName())) {
+                        writer.println(header.getValue());
+                    }
+                }
                 return 0;
             }
             return status;
