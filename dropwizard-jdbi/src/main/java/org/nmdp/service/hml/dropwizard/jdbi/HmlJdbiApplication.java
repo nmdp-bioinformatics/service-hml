@@ -1,6 +1,6 @@
 /*
 
-    hml-dropwizard  HML dropwizard.
+    hml-dropwizard-jdbi  HML dropwizard JDBI.
     Copyright (c) 2015 National Marrow Donor Program (NMDP)
 
     This library is free software; you can redistribute it and/or modify it
@@ -20,7 +20,7 @@
     > http://www.gnu.org/licenses/lgpl.html
 
 */
-package org.nmdp.service.hml.dropwizard;
+package org.nmdp.service.hml.dropwizard.jdbi;
 
 import javax.annotation.concurrent.Immutable;
 
@@ -34,6 +34,10 @@ import com.wordnik.swagger.config.SwaggerConfig;
 
 import com.wordnik.swagger.model.ApiInfo;
 
+import io.dropwizard.jdbi.DBIFactory;
+
+import io.dropwizard.jdbi.bundles.DBIExceptionsBundle;
+
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
 
@@ -43,13 +47,16 @@ import org.nmdp.service.hml.resource.HmlExceptionMapper;
 import org.nmdp.service.hml.resource.HmlMessageBodyReader;
 import org.nmdp.service.hml.resource.HmlResource;
 
-import org.nmdp.service.hml.service.impl.HmlServiceModule;
+import org.nmdp.service.hml.service.jdbi.HmlDao;
+import org.nmdp.service.hml.service.jdbi.JdbiHmlServiceModule;
+
+import org.skife.jdbi.v2.DBI;
 
 /**
- * HML application.
+ * HML JDBI application.
  */
 @Immutable
-public final class HmlApplication extends CommonServiceApplication<HmlConfiguration> {
+public final class HmlJdbiApplication extends CommonServiceApplication<HmlJdbiConfiguration> {
 
     @Override
     public String getName() {
@@ -57,13 +64,22 @@ public final class HmlApplication extends CommonServiceApplication<HmlConfigurat
     }
 
     @Override
-    public void initializeService(final Bootstrap<HmlConfiguration> bootstrap) {
-        // empty
+    public void initializeService(final Bootstrap<HmlJdbiConfiguration> bootstrap) {
+        bootstrap.addBundle(new DBIExceptionsBundle());
     }
 
     @Override
-    public void runService(final HmlConfiguration configuration, final Environment environment) throws Exception {
-        Injector injector = Guice.createInjector(new HmlServiceModule());
+    public void runService(final HmlJdbiConfiguration configuration, final Environment environment) throws Exception {
+        final DBIFactory factory = new DBIFactory();
+        final DBI jdbi = factory.build(environment, configuration.getDataSourceFactory(), "mysql");
+        final HmlDao hmlDao = jdbi.onDemand(HmlDao.class);
+
+        Injector injector = Guice.createInjector(new JdbiHmlServiceModule(), new AbstractModule() {
+                @Override
+                protected void configure() {
+                    bind(HmlDao.class).toInstance(hmlDao);
+                }
+            });
 
         environment.jersey().register(injector.getInstance(HmlResource.class));
         environment.jersey().register(new HmlExceptionMapper());
@@ -92,6 +108,6 @@ public final class HmlApplication extends CommonServiceApplication<HmlConfigurat
      * @throws Exception if an error occurs
      */
     public static void main(final String[] args) throws Exception {
-        new HmlApplication().run(args);
+        new HmlJdbiApplication().run(args);
     }
 }
