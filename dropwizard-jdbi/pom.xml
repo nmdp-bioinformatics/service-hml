@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    hml-dropwizard  HML dropwizard.
+    hml-dropwizard-jdbi  HML dropwizard JDBI.
     Copyright (c) 2015 National Marrow Donor Program (NMDP)
 
     This library is free software; you can redistribute it and/or modify it
@@ -29,9 +29,9 @@
     <artifactId>hml-multimodule</artifactId>
     <version>1.0-SNAPSHOT</version>
   </parent>
-  <artifactId>hml-dropwizard</artifactId>
-  <name>hml-dropwizard</name>
-  <description>HML dropwizard.</description>
+  <artifactId>hml-dropwizard-jdbi</artifactId>
+  <name>hml-dropwizard-jdbi</name>
+  <description>HML dropwizard JDBI.</description>
   <build>
     <plugins>
       <plugin>
@@ -60,7 +60,7 @@
               <transformers>
                 <transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>
                 <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                  <mainClass>org.nmdp.service.hml.dropwizard.HmlApplication</mainClass>
+                  <mainClass>org.nmdp.service.hml.dropwizard.jdbi.HmlJdbiApplication</mainClass>
                 </transformer>
               </transformers>
             </configuration>
@@ -78,7 +78,7 @@
       </dependency>
       <dependency>
         <groupId>org.nmdp.service</groupId>
-        <artifactId>hml-service-impl</artifactId>
+        <artifactId>hml-service-jdbi</artifactId>
         <version>${project.version}</version>
       </dependency>
     </dependencies>
@@ -105,13 +105,28 @@
       <scope>compile</scope>
     </dependency>
     <dependency>
+      <groupId>io.dropwizard</groupId>
+      <artifactId>dropwizard-jdbi</artifactId>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
       <scope>test</scope>
     </dependency>
     <dependency>
+      <groupId>mysql</groupId>
+      <artifactId>mysql-connector-java</artifactId>
+      <scope>runtime</scope>
+    </dependency>
+    <dependency>
       <groupId>org.nmdp.service</groupId>
       <artifactId>common-dropwizard</artifactId>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>io.dropwizard</groupId>
+      <artifactId>dropwizard-jdbi</artifactId>
       <scope>compile</scope>
     </dependency>
     <dependency>
@@ -121,7 +136,7 @@
     </dependency>
     <dependency>
       <groupId>org.nmdp.service</groupId>
-      <artifactId>hml-service-impl</artifactId>
+      <artifactId>hml-service-jdbi</artifactId>
       <scope>compile</scope>
     </dependency>
   </dependencies>
