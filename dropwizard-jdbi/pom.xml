@@ -125,11 +125,6 @@
       <scope>compile</scope>
     </dependency>
     <dependency>
-      <groupId>io.dropwizard</groupId>
-      <artifactId>dropwizard-jdbi</artifactId>
-      <scope>compile</scope>
-    </dependency>
-    <dependency>
       <groupId>org.nmdp.service</groupId>
       <artifactId>hml-resource</artifactId>
       <scope>compile</scope>
