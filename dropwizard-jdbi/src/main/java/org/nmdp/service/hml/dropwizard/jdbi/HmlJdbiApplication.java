@@ -35,6 +35,7 @@ import com.wordnik.swagger.config.SwaggerConfig;
 import com.wordnik.swagger.model.ApiInfo;
 
 import io.dropwizard.jdbi.DBIFactory;
+import io.dropwizard.jdbi.DBIHealthCheck;
 
 import io.dropwizard.jdbi.bundles.DBIExceptionsBundle;
 
@@ -81,12 +82,13 @@ public final class HmlJdbiApplication extends CommonServiceApplication<HmlJdbiCo
                 }
             });
 
+        environment.healthChecks().register("database", new DBIHealthCheck(jdbi, "select 1"));
+
         environment.jersey().register(injector.getInstance(HmlResource.class));
         environment.jersey().register(new HmlExceptionMapper());
         environment.jersey().register(new HmlMessageBodyReader());
 
-        environment.getObjectMapper()
-            .enable(SerializationFeature.INDENT_OUTPUT);
+        environment.getObjectMapper().enable(SerializationFeature.INDENT_OUTPUT);
     }
 
     @Override

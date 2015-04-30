@@ -24,6 +24,8 @@ package org.nmdp.service.hml.dropwizard;
 
 import javax.annotation.concurrent.Immutable;
 
+import com.codahale.metrics.health.HealthCheck;
+
 import com.fasterxml.jackson.databind.SerializationFeature;
 
 import com.google.inject.AbstractModule;
@@ -65,12 +67,18 @@ public final class HmlApplication extends CommonServiceApplication<HmlConfigurat
     public void runService(final HmlConfiguration configuration, final Environment environment) throws Exception {
         Injector injector = Guice.createInjector(new HmlServiceModule());
 
+        environment.healthChecks().register("hml", new HealthCheck() {
+                @Override
+                protected Result check() throws Exception {
+                    return Result.healthy();
+                }
+            });
+
         environment.jersey().register(injector.getInstance(HmlResource.class));
         environment.jersey().register(new HmlExceptionMapper());
         environment.jersey().register(new HmlMessageBodyReader());
 
-        environment.getObjectMapper()
-            .enable(SerializationFeature.INDENT_OUTPUT);
+        environment.getObjectMapper().enable(SerializationFeature.INDENT_OUTPUT);
     }
 
     @Override
